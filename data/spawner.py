@@ -216,6 +216,7 @@ def main(destdir, count=1):
         if not out:
             count += 1
             print('Warning: Incorrect dataset skipped')
+            continue
         
         out.save(filename)
     return 0
