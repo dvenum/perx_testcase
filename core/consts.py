@@ -1,0 +1,4 @@
+"""
+    Project wide contants
+"""
+
