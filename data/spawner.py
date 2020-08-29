@@ -35,8 +35,6 @@ import string
 
 import sys, os
 
-from openpyxl import Workbook
-
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_FILENAME = 'dataset_'
@@ -193,7 +191,7 @@ def build_datasample():
     params = get_random_meta()
     before, after = get_random_sequence(params['sequence_len'])
 
-    wb = Workbook()
+    wb = openpyxl.Workbook()
 
     # Prepare random sheets
     ws = wb.active
