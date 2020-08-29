@@ -1,0 +1,90 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: .
+    command: >
+      bash -c "./bin/wait_for_db.sh && python /code/manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - adminer
+      - nginx
+    ports:
+      - 8265:8265
+    shm_size: 256M
+
+  test:
+    build:
+      context: .
+    environment:
+      WAIT_PERIOD: 0.5
+    env_file:
+      - .env
+    command: >
+      bash -c "./bin/wait_for_db.sh && python /code/manage.py test --keepdb"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - nginx
+      - api
+
+  migration:
+    build:
+      context: .
+    environment:
+      WAIT_PERIOD: 0.5
+    env_file:
+      - .env
+    command: >
+      bash -c "./bin/wait_for_db.sh && python /code/manage.py makemigrations &&\
+               python /code/manage.py migrate && \
+               python /code/manage.py createsuperuser2 --username admin --password \
+               ${DJANGO_ADMIN_PASSWORD} --noinput --email 'dvenum.at@gmail.com'"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: "${POSTGRES_DBNAME}"
+      POSTGRES_USER: "${POSTGRES_USERNAME}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    command: >
+      postgres -c config_file=/etc/postgresql.conf
+    #["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./config/postgresql/postgresql.conf:/etc/postgresql.conf
+      - ./config/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    shm_size: 256M
+
+  nginx:
+    image: nginx:1.17-alpine
+    restart: always
+    volumes:
+      - .:/code
+      - ./nginx:/etc/nginx
+    ports:
+      - 8000:80
+
+  adminer:
+    image: adminer:4.7.5
+    restart: always
+    ports:
+      - 8081:8080
+    depends_on:
+      - db
+
+        #
+# vim: ts=2:sw=2
