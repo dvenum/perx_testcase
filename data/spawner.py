@@ -101,7 +101,16 @@ def get_random_sequence(length):
     '''
     base_seq = [random.randint(1, sys.maxsize) for _ in range(length)]
     before = base_seq.copy()
-    base_seq.append(random.randint(1, sys.maxsize))
+
+    for _ in range(LIMIT_OF_SAFE):
+        x = random.randint(1, sys.maxsize)
+        if x not in base_seq:
+            break
+
+    if x in base_seq:
+        return None
+
+    base_seq.append(x)
     random.shuffle(base_seq)
     after = base_seq
 
