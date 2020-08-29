@@ -103,6 +103,7 @@ class Document(object):
                         self.before = Column(self.target_table, col_idx)
                     elif h == LABEL_AFTER:
                         self.after = Column(self.target_table, col_idx)
+                break
 
         return self.before and self.after
 
