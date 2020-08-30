@@ -79,10 +79,10 @@ def main():
             answer = json.loads(response.text)
             if answer['error'].lower() == 'ok':
                 if answer['status'].lower() == 'finished':
-                    print(uuid, answer['result'], answer['finished_at'])
+                    print(uuid, answer['result'], answer['uploaded_at'], answer['finished_at'])
                     uuids.remove(uuid)
                 else:
-                    print(uuid, answer['status'])
+                    print(uuid, answer['uploaded_at'], answer['status'])
             else:
                 print(uuid, answer['error'])
         time.sleep(DELAY)

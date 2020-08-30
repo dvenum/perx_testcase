@@ -71,13 +71,16 @@ class get_status(APIView):
             result = models.ResultModel.objects.get(doc_uuid=uuid)
             if not result:
                 return Response({'status': 'finished',
+                                 'uploaded_at': doc_model.uploaded_at,
                                  'error': 'unknown result'})
 
             return Response({'status': 'finished',
+                             'uploaded_at': doc_model.uploaded_at,
                              'finished_at': doc_model.finished_at,
                              'result': f'{result.direction.label}: {result.x}',
                              'error': 'ok'})
         else:
             return Response({'status': {'P': 'pending', 'R': 'running'}.get(doc_model.status.label, 'unknown'),
+                             'uploaded_at': doc_model.uploaded_at,
                              'error': 'ok'})
 
