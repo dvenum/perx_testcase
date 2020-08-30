@@ -35,7 +35,7 @@ class document_upload(APIView):
 
         if not core.utils.validate_excel(file_obj):
             return Response({f'{filename}': '', 
-                              'Error': 'wrong format. xlsx/xls allowed only.'})
+                              'error': 'wrong format. xlsx/xls allowed only.'})
 
         document = models.DocumentModel(
                 located=models.DOCUMENT_LOCATION.LOCAL,
@@ -43,8 +43,9 @@ class document_upload(APIView):
         if document.store(file_obj):
             document.save()
             fobj = document.load()
-            return Response({f'{filename}': f'{document.id}'})
+            return Response({f'{filename}': f'{document.id}',
+                              'error': 'ok'})
         else:
             return Response({f'{filename}': '', 
-                              'Error': 'Service unavailable.'})
+                              'error': 'Service unavailable.'})
 

@@ -5,6 +5,7 @@ static/django_extensions
 static/rest_framework
 core/secrets.py
 media/
+example/.token
 
 
 # Byte-compiled / optimized / DLL files

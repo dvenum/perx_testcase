@@ -2,6 +2,7 @@ Django
 django-enumfield
 django-extensions
 djangorestframework
+django-rest-knox
 openpyxl
 psycopg2
 

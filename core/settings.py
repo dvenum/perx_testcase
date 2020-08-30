@@ -39,6 +39,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
+    'rest_framework.authtoken',
+    #'knox',
     #'django_filters',
     #'caching',
 
@@ -143,7 +145,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         #'surface.rest.DatatablesFilterBackend',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': [],
 
     #'DEFAULT_PAGINATION_CLASS': 'surface.rest.DatatablesPageNumberPagination', 
