@@ -1,5 +1,9 @@
 data/*.xlsx
 pgdata/
+static/admin
+static/django_extensions
+static/rest_framework
+core/secrets.py
 
 
 # Byte-compiled / optimized / DLL files

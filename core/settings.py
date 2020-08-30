@@ -6,6 +6,8 @@ Django settings for Perx test assignment project
 import django
 import os
 
+from .secrets import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
@@ -21,9 +23,6 @@ logfile = os.path.join(LOG_DIR, f'perx-{loglevel}.log')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3+zj3ugk_gn&s9kg*@d(4bn)-ps1!4sapyx7_@ybnmk4=3%1v2'
 
 ALLOWED_HOSTS = ['runserver', 'localhost']
 
@@ -78,6 +77,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# File storage
+MEDIA_ROOT = '/media'   # see docker-compose.yml to control real location
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -129,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
