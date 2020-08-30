@@ -24,16 +24,18 @@ Installation
 	5. Run tests:
 	$ docker-compose up test
 
-	6. Start api backend:
+	6. Run ./manage.py collectstatic for /admin/, if you like
+
+	7. Start api backend:
 	$ docker-compose up api
 
 	Browse http://localhost:8000 to see django hello page (DEBUG=True)
 
-	7. Visit http://localhost:8000/admin/
+	8. Visit http://localhost:8000/admin/
 	   Create new Token for admin or make your own user.
 	   Copy token (ex.: '40e787c88ecf0c5e7c01de8b2adfbc978432fb9b') to example/.token
 
-	8. Run client sample:
+	9. Run client sample:
 	$ cd example
 	$ python3 client.py
 
