@@ -39,6 +39,11 @@ Installation
 	$ cd example
 	$ python3 client.py
 
+	10. Runt tests:
+	$ docker-compose up test
+
+
+	Misc:
 	$ docker-compose up adminer
 	browse http://localhost:8081/
 
@@ -48,5 +53,4 @@ Details
 
 	* Максимальный размер файла установлен 80М. nginx может и больше, но даже с таким размеров все же лучше усложнять API и делать загрузку по частям.
 	  Если клиенты свои, а документы известного формата, можно и обойтись.
-	*
 
