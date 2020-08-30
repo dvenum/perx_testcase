@@ -12,11 +12,11 @@
         (https://pylightxl.readthedocs.io/en/latest/)
 
 '''
-
 import openpyxl
+from io import BytesIO
 
-SOURCE_LOCAL = 'local'
-SOURCE_GCLOUD = 'gs'
+from storage import models
+
 
 LABEL_BEFORE = 'before'
 LABEL_AFTER = 'after'
@@ -25,20 +25,6 @@ STATUS_NOTREADY = 'unprocessed'
 STATUS_INVALID = 'invalid'
 STATUS_ADDED = 'added'
 STATUS_REMOVED = 'removed'
-
-
-"""
-class Status(object):
-    ''' Result of document processing
-    '''
-
-    def __init__(self, doc_path, status, X=None):
-        self.path = doc_path
-        self.status = status
-        self.X = X
-
-    #def 
-"""
 
 
 class Column(object):
@@ -73,10 +59,24 @@ class Document(object):
         self.status = STATUS_NOTREADY
         self.target_table = None    # preloaded list of cells
 
+
+    def load_by_uuid(self, uuid):
+        doc_model = models.DocumentModel.objects.get(id=uuid)
+        return self.load_from_model(doc_model)
+
+    def load_from_model(self, doc_model):
+        file_obj = doc_model.load()
+        self.wb = openpyxl.load_workbook(filename=BytesIO(file_obj.read()))
+
+        self.path = doc_model.filename
+        self.source = doc_model.located
+
+        return doc_model
+
     def load_from_file(self, filename):
         self.wb = openpyxl.load_workbook(filename, read_only=True)
         self.path = filename
-        self.source = SOURCE_LOCAL
+        self.source = models.DOCUMENT_LOCATION.LOCAL
 
     def load_sheet(self, ws):
         ''' this xml document is row oriented and openpyxl can show columns

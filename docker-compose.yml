@@ -15,6 +15,8 @@ services:
       - db
       - adminer
       - nginx
+      - celery
+      - rabbit
     ports:
       - 8265:8265
     shm_size: 256M
@@ -87,5 +89,30 @@ services:
     depends_on:
       - db
 
-        #
+  celery:
+    build: .
+    restart: always
+    command: ["celery", "worker", "--app=surface", "--concurrency=2", "--loglevel=INFO"]
+    env_file:
+      - .env
+    volumes:
+      - .:/code
+      - ./media:/media
+    depends_on:
+      - rabbit
+
+  rabbit:
+    image: rabbitmq:3.8-alpine
+    restart: always
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_DEFAULT_USER: "${BROKER_USERNAME}"
+      RABBITMQ_DEFAULT_PASS: "${BROKER_PASSWORD}"
+      RABBITMQ_DEFAULT_PORT: "${BROKER_PORT}"
+      RABBITMQ_DEFAULT_VHOST: "${BROKER_VHOST}"
+    ports:
+      - 8082:8080
+
+
 # vim: ts=2:sw=2

@@ -23,6 +23,7 @@ from core import settings
 from core import logs
 from surface import serializers, rest
 from storage import models
+from surface import tasks
 
 logger = logs.get_logger(__name__)
 
@@ -41,8 +42,13 @@ class document_upload(APIView):
                 located=models.DOCUMENT_LOCATION.LOCAL,
         )
         if document.store(file_obj):
+            # write to file storage
             document.save()
-            fobj = document.load()
+
+            # put document to queue
+            tasks.process_document.delay(document.id)
+            #tasks.process_document(document.id)
+
             return Response({f'{filename}': f'{document.id}',
                               'error': 'ok'})
         else:

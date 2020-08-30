@@ -12,5 +12,7 @@ from .document import (
     DocumentModel,
     ResultModel,
     DOCUMENT_LOCATION,
+    DOCUMENT_STATUS,
+    RESULT_DIRECTION,
 )
 

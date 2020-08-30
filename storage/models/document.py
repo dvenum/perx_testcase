@@ -122,7 +122,7 @@ class DocumentModel(base.TimestampMixin, models.Model):
         return fobj
 
     def __str__(self):
-        return f'{self.id} {self.located.label} {self.media_path}'
+        return f'{self.id} {self.located.label} {self.filename}'
 
     class Meta:
         base_manager_name = 'objects'
