@@ -15,6 +15,7 @@ from rest_framework.response import Response
 
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
+from rest_framework.permissions import IsAuthenticated
 
 #from django.db.models import Func, F, Q
 
@@ -30,6 +31,7 @@ logger = logs.get_logger(__name__)
  
 class document_upload(APIView):
     parser_classes = [FileUploadParser]
+    permission_classes = [IsAuthenticated]
 
     def put(self, request, filename, format=None):
         file_obj = request.data['file']
@@ -54,4 +56,28 @@ class document_upload(APIView):
         else:
             return Response({f'{filename}': '', 
                               'error': 'Service unavailable.'})
+
+
+class get_status(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, uuid):
+        doc_model = models.DocumentModel.objects.get(id=uuid)
+        if not doc_model:
+            return Response({'status': 'unknown',
+                             'error': 'unknown uuid'})
+
+        if doc_model.status == models.DOCUMENT_STATUS.FINISHED:
+            result = models.ResultModel.objects.get(doc_uuid=uuid)
+            if not result:
+                return Response({'status': 'finished',
+                                 'error': 'unknown result'})
+
+            return Response({'status': 'finished',
+                             'finished_at': doc_model.finished_at,
+                             'result': f'{result.direction.label}: {result.x}',
+                             'error': 'ok'})
+        else:
+            return Response({'status': {'P': 'pending', 'R': 'running'}.get(doc_model.status.label, 'unknown'),
+                             'error': 'ok'})
 

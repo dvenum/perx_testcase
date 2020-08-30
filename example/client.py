@@ -6,6 +6,7 @@
 import os
 import requests
 import json
+import time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TOKEN_FILE = os.path.join(BASE_DIR,'.token')
@@ -36,6 +37,7 @@ def list_xlsx(docs_dir):
 
 
 UPLOAD_URL = 'http://localhost:8000/api/upload/{}'
+STATUS_URL = 'http://localhost:8000/api/status/{}'
 
 def main():
     token = read_token(TOKEN_FILE)
@@ -49,6 +51,7 @@ def main():
 
     uuids = list()
     target_dir = TESTDIR
+
     # upload
     for docname in list_xlsx(target_dir):
         url = UPLOAD_URL.format(docname)
@@ -68,8 +71,21 @@ def main():
         uuids.append(uuid)
 
     # check
-    for uuid in uuids:
-        print(uuid)
+    DELAY = 0.2
+    while uuids:
+        for uuid in uuids:
+            status_url = STATUS_URL.format(uuid)
+            response = requests.get(status_url, headers=headers)
+            answer = json.loads(response.text)
+            if answer['error'].lower() == 'ok':
+                if answer['status'].lower() == 'finished':
+                    print(uuid, answer['result'], answer['finished_at'])
+                    uuids.remove(uuid)
+                else:
+                    print(uuid, answer['status'])
+            else:
+                print(uuid, answer['error'])
+        time.sleep(DELAY)
     
 
 if __name__ == '__main__':
