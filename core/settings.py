@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     #'caching',
 
     'storage.apps.StorageConfig',
-    #'processor.apps.ProcessorConfig',
-    #'surface.apps.SurfaceConfig',
+    'surface.apps.SurfaceConfig',
 ]
 
 MIDDLEWARE = [

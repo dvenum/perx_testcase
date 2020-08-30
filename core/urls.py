@@ -23,7 +23,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', include('surface.urls')),
+    path('api/', include('surface.urls')),
     #path('', RedirectView.as_view(url='/api')),
 ]
 
