@@ -49,6 +49,19 @@ Installation
 	browse http://localhost:8081/
 
 
+
+API Format
+=================
+	
+	URL: /api/upload/{filename}
+	DESC: Upload a document to server
+	RETURN: uuid
+
+	URL: /api/status/{uuid}
+	DESC: Describe documents status
+	RETURN: documents meta
+
+
 Details
 =================
 
